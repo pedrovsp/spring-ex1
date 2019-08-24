@@ -8,9 +8,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.pedrovitorino.course.entities.Category;
 import com.pedrovitorino.course.entities.Order;
 import com.pedrovitorino.course.entities.User;
 import com.pedrovitorino.course.entities.enums.OrderStatus;
+import com.pedrovitorino.course.repositories.CategoryRepository;
 import com.pedrovitorino.course.repositories.OrderRepository;
 import com.pedrovitorino.course.repositories.UserRepository;
 
@@ -22,9 +24,17 @@ public class TestConfig implements CommandLineRunner {
 	private UserRepository userRepository;
 	@Autowired
 	private OrderRepository orderRepository;
-
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
+		Category cat1 = new Category(null, "Electronics");
+		Category cat2 = new Category(null, "Books");
+		Category cat3 = new Category(null, "Computers");
+		
+		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+		
 		User u1 = new User(null, "Nelio", "nelio@email.com", "34988884444", "123543", null);
 		User u2 = new User(null, "Camila", "camila@email.com", "34983384444", "123123", null);
 		
