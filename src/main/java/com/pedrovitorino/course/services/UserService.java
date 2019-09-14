@@ -2,6 +2,7 @@ package com.pedrovitorino.course.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -10,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.pedrovitorino.course.dto.UserDTO;
 import com.pedrovitorino.course.entities.User;
 import com.pedrovitorino.course.repositories.UserRepository;
 import com.pedrovitorino.course.services.exceptions.DatabaseException;
@@ -21,13 +23,16 @@ public class UserService {
 		@Autowired
 		private UserRepository userRepository;
 		
-		public List<User> findAll() {
-			return userRepository.findAll();
+		public List<UserDTO> findAll() {
+			List<User> list = userRepository.findAll();
+			
+			return list.stream().map(e -> new UserDTO(e)).collect(Collectors.toList());
 		}
 		
-		public User findById(Long id) {
+		public UserDTO findById(Long id) {
 			Optional<User> obj = userRepository.findById(id);
-			return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+			User entity = obj.orElseThrow(() -> new ResourceNotFoundException(id));
+			return new UserDTO(entity);
 		}
 		
 
