@@ -2,6 +2,7 @@ package com.pedrovitorino.course.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -9,12 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.pedrovitorino.course.dto.CategoryDTO;
+import com.pedrovitorino.course.dto.UserDTO;
 import com.pedrovitorino.course.entities.Category;
-import com.pedrovitorino.course.entities.Order;
 import com.pedrovitorino.course.entities.User;
 import com.pedrovitorino.course.repositories.CategoryRepository;
-import com.pedrovitorino.course.repositories.OrderRepository;
 import com.pedrovitorino.course.services.exceptions.DatabaseException;
 import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;
 
@@ -24,15 +26,16 @@ public class CategoryService {
 		@Autowired
 		private CategoryRepository categoryRepository;
 		
-		public List<Category> findAll() {
-			return categoryRepository.findAll();
+		public List<CategoryDTO> findAll() {
+			List<Category> list = categoryRepository.findAll();
+			return list.stream().map(e -> new CategoryDTO(e)).collect(Collectors.toList());
 		}
 		
-		public Category findById(Long id) {
+		public CategoryDTO findById(Long id) {
 			Optional<Category> obj = categoryRepository.findById(id);
-			return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+			Category entity = obj.orElseThrow(() -> new ResourceNotFoundException(id));
+			return new CategoryDTO(entity);
 		}
-		
 
 		public Category insert(Category obj) {
 			return categoryRepository.save(obj);
@@ -47,18 +50,20 @@ public class CategoryService {
 				throw new DatabaseException(e.getMessage());
 			}
 		}
-		
-		public Category update(Long id, Category obj) {
+
+		@Transactional
+		public CategoryDTO update(Long id, CategoryDTO obj) {
 			try {
 				Category entity = categoryRepository.getOne(id);
 				updateData(entity, obj);
-				return categoryRepository.save(entity);				
+				entity = categoryRepository.save(entity);
+				return new CategoryDTO(entity);
 			} catch(EntityNotFoundException e) {
 				throw new ResourceNotFoundException(id);
 			}
 		}
 		
-		private void updateData(Category entity, Category obj) {
+		private void updateData(Category entity, CategoryDTO obj) {
 			entity.setName(obj.getName());
 		}
 		
