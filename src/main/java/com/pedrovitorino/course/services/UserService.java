@@ -1,12 +1,14 @@
 package com.pedrovitorino.course.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pedrovitorino.course.entities.User;
 import com.pedrovitorino.course.repositories.UserRepository;
+import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -19,7 +21,8 @@ public class UserService {
 		}
 		
 		public User findById(Long id) {
-			return userRepository.findById(id).get();
+			Optional<User> obj = userRepository.findById(id);
+			return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 		}
 		
 
