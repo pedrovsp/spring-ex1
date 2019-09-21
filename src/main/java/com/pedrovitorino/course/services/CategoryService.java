@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pedrovitorino.course.dto.CategoryDTO;
-import com.pedrovitorino.course.dto.UserDTO;
 import com.pedrovitorino.course.entities.Category;
-import com.pedrovitorino.course.entities.User;
 import com.pedrovitorino.course.repositories.CategoryRepository;
 import com.pedrovitorino.course.services.exceptions.DatabaseException;
 import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;

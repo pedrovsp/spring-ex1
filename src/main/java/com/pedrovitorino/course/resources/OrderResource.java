@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pedrovitorino.course.dto.OrderDTO;
-import com.pedrovitorino.course.entities.Order;
 import com.pedrovitorino.course.services.OrderService;
 
 @RestController
