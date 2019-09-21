@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pedrovitorino.course.dto.CategoryDTO;
 import com.pedrovitorino.course.dto.ProductCategoriesDTO;
@@ -44,6 +47,18 @@ public class ProductService {
 			return new ProductDTO(entity);
 		}
 
+		@Transactional
+		public ProductDTO update(Long id, ProductCategoriesDTO obj) {
+			try {
+				Product entity = productRepository.getOne(id);
+				updateData(entity, obj);
+				entity = productRepository.save(entity);
+				return new ProductDTO(entity);
+			} catch(EntityNotFoundException e) {
+				throw new ResourceNotFoundException(id);
+			}
+		}
+		
 		private void setProductCategories(Product entity, List<CategoryDTO> categories) {
 			entity.getCategories().clear();
 			for(CategoryDTO category: categories) {
@@ -53,5 +68,13 @@ public class ProductService {
 			
 		}
 		
-		
+		private void updateData(Product entity, ProductCategoriesDTO obj) {
+			entity.setName(obj.getName());
+			entity.setDescription(obj.getDescription());
+			entity.setPrice(obj.getPrice());
+			entity.setImgUrl(obj.getImgUrl());
+			if (obj.getCategories() != null && obj.getCategories().size() > 0) {
+				setProductCategories(entity, obj.getCategories());
+			}
+		}
 }
