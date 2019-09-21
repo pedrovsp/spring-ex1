@@ -2,16 +2,29 @@ package com.pedrovitorino.course.dto;
 
 import java.io.Serializable;
 
-import com.pedrovitorino.course.entities.User;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.validator.constraints.Length;
+
+import com.pedrovitorino.course.entities.User;
+import com.pedrovitorino.course.services.validation.UserUpdateValid;
+
+@UserUpdateValid
 public class UserDTO implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	@NotEmpty(message="can't be empty")
+	@Length(min = 5, max = 10, message="tamanho entre 5 e 10")
 	private String name;
+	@NotEmpty(message="can't be empty")
+	@Email(message="e-mail invalido")
 	private String email;
+	@NotEmpty(message="can't be empty")
+	@Length(min = 5, max = 20, message="tamanho entre 5 e 20")
 	private String phone;
 	
 	public UserDTO() {}
