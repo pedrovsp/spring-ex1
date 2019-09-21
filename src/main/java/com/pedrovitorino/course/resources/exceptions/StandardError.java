@@ -1,4 +1,4 @@
-package com.pedrovitorino.course.services.exceptions;
+package com.pedrovitorino.course.resources.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -17,7 +17,7 @@ public class StandardError implements Serializable{
 	private String message;
 	private String path;
 	
-	private StandardError() {
+	public StandardError() {
 		
 	}
 
