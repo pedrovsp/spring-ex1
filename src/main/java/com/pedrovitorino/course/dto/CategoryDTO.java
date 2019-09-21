@@ -3,7 +3,6 @@ package com.pedrovitorino.course.dto;
 import java.io.Serializable;
 
 import com.pedrovitorino.course.entities.Category;
-import com.pedrovitorino.course.entities.User;
 
 public class CategoryDTO implements Serializable {
 
