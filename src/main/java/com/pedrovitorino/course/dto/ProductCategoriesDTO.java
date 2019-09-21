@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+
+import org.hibernate.validator.constraints.Length;
+
 import com.pedrovitorino.course.entities.Product;
 
 public class ProductCategoriesDTO implements Serializable {
@@ -11,8 +16,13 @@ public class ProductCategoriesDTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@NotEmpty
+	@Length(min=3, max=80)
 	private String name;
+	@NotEmpty
+	@Length(min=8)
 	private String description;
+	@Positive(message="preco deve ser maior que 0")
 	private double price;
 	private String imgUrl;
 	private List<CategoryDTO> categories = new ArrayList<CategoryDTO>();

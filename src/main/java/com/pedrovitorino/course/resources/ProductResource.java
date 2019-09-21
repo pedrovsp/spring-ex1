@@ -3,6 +3,8 @@ package com.pedrovitorino.course.resources;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +43,7 @@ public class ProductResource {
 	
 	@Transactional
 	@PostMapping
-	public ResponseEntity<ProductDTO> insert(@RequestBody ProductCategoriesDTO obj) {
+	public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductCategoriesDTO obj) {
 		ProductDTO newDto = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newDto.getId()).toUri();
 		return ResponseEntity.created(uri).body(newDto);
