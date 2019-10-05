@@ -9,6 +9,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;
 @Service
 public class UserService {
 		
+		@Autowired
+		private BCryptPasswordEncoder passwordEncoder;
 		@Autowired
 		private UserRepository userRepository;
 		
@@ -40,6 +43,7 @@ public class UserService {
 
 		public UserDTO insert(UserInsertDTO obj) {
 			User entity = obj.toEntity();
+			entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 			entity = userRepository.save(entity);
 			return new UserDTO(entity);
 		}
