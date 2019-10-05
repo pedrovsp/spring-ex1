@@ -13,12 +13,14 @@ import com.pedrovitorino.course.entities.Order;
 import com.pedrovitorino.course.entities.OrderItem;
 import com.pedrovitorino.course.entities.Payment;
 import com.pedrovitorino.course.entities.Product;
+import com.pedrovitorino.course.entities.Role;
 import com.pedrovitorino.course.entities.User;
 import com.pedrovitorino.course.entities.enums.OrderStatus;
 import com.pedrovitorino.course.repositories.CategoryRepository;
 import com.pedrovitorino.course.repositories.OrderItemRepository;
 import com.pedrovitorino.course.repositories.OrderRepository;
 import com.pedrovitorino.course.repositories.ProductRepository;
+import com.pedrovitorino.course.repositories.RoleRepository;
 import com.pedrovitorino.course.repositories.UserRepository;
 
 @Configuration
@@ -35,6 +37,8 @@ public class TestConfig implements CommandLineRunner {
 	private ProductRepository productRepository;
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -65,7 +69,18 @@ public class TestConfig implements CommandLineRunner {
 		User u2 = new User(null, "Camila", "camila@email.com", "34983384444", "123123");
 		
 		userRepository.saveAll(Arrays.asList(u1, u2));
+	
+		Role r1 = new Role(null, "ROLE_CLIENT");
+		Role r2 = new Role(null, "ROLE_ADMIN");
 		
+		roleRepository.saveAll(Arrays.asList(r1, r2));
+		
+		u1.getRoles().add(r1);
+		u2.getRoles().add(r1);
+		u1.getRoles().add(r2);
+		
+		userRepository.saveAll(Arrays.asList(u1, u2));
+
 		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), u1, OrderStatus.WAITING_PAYMENT);
 		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), u2, OrderStatus.PAID);
 		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), u1, OrderStatus.WAITING_PAYMENT);
