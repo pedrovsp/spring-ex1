@@ -9,6 +9,9 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +24,7 @@ import com.pedrovitorino.course.services.exceptions.DatabaseException;
 import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 		
 		@Autowired
 		private BCryptPasswordEncoder passwordEncoder;
@@ -74,5 +77,14 @@ public class UserService {
 			entity.setName(obj.getName());
 			entity.setEmail(obj.getEmail());
 			entity.setPhone(obj.getPhone());
+		}
+
+		@Override
+		public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+			User user = userRepository.findByEmail(username);
+			if (user == null) {
+				throw new UsernameNotFoundException(username);
+			}
+			return user;
 		}
 }

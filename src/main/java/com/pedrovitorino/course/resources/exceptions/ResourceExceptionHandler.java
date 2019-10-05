@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.pedrovitorino.course.services.exceptions.DatabaseException;
+import com.pedrovitorino.course.services.exceptions.JWTAuthencticationException;
 import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -42,6 +43,14 @@ public class ResourceExceptionHandler {
 		{
 			err.addError(exception.getField(), exception.getDefaultMessage());
 		}
+		return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(JWTAuthencticationException.class)
+	public ResponseEntity<StandardError> jwtAuthentication(JWTAuthencticationException e, HttpServletRequest request) {
+		String error = "auth error";
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
 }
