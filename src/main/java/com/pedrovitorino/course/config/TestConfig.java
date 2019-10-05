@@ -79,8 +79,8 @@ public class TestConfig implements CommandLineRunner {
 		roleRepository.saveAll(Arrays.asList(r1, r2));
 		
 		u1.getRoles().add(r1);
-		u2.getRoles().add(r1);
 		u1.getRoles().add(r2);
+		u2.getRoles().add(r1);
 		
 		userRepository.saveAll(Arrays.asList(u1, u2));
 

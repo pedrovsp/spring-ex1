@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.pedrovitorino.course.services.CategoryService;
 
 @RestController
 @RequestMapping(value = "/categories")
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class CategoryResource {
 	
 	@Autowired
@@ -38,7 +40,7 @@ public class CategoryResource {
 		return ResponseEntity.ok().body(category);
 	}
 	
-	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Category> insert(@RequestBody Category obj) {
 		obj = service.insert(obj);
@@ -46,12 +48,14 @@ public class CategoryResource {
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO obj) {
 		obj = service.update(id, obj);
