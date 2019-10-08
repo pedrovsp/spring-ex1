@@ -30,6 +30,8 @@ public class UserService implements UserDetailsService {
 		private BCryptPasswordEncoder passwordEncoder;
 		@Autowired
 		private UserRepository userRepository;
+		@Autowired
+		private AuthService authService;
 		
 		public List<UserDTO> findAll() {
 			List<User> list = userRepository.findAll();
@@ -38,6 +40,7 @@ public class UserService implements UserDetailsService {
 		}
 		
 		public UserDTO findById(Long id) {
+			authService.validateSelfOrAdmin(id);
 			Optional<User> obj = userRepository.findById(id);
 			User entity = obj.orElseThrow(() -> new ResourceNotFoundException(id));
 			return new UserDTO(entity);
@@ -63,6 +66,7 @@ public class UserService implements UserDetailsService {
 		
 		@Transactional
 		public UserDTO update(Long id, UserDTO obj) {
+			authService.validateSelfOrAdmin(id);
 			try {
 				User entity = userRepository.getOne(id);
 				updateData(entity, obj);
