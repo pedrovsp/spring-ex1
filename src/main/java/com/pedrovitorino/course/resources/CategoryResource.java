@@ -22,7 +22,6 @@ import com.pedrovitorino.course.services.CategoryService;
 
 @RestController
 @RequestMapping(value = "/categories")
-@PreAuthorize("hasAnyRole('ADMIN')")
 public class CategoryResource {
 	
 	@Autowired
