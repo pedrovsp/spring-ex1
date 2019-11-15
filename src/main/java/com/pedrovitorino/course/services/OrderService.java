@@ -1,5 +1,6 @@
 package com.pedrovitorino.course.services;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -13,8 +14,12 @@ import com.pedrovitorino.course.dto.OrderDTO;
 import com.pedrovitorino.course.dto.OrderItemDTO;
 import com.pedrovitorino.course.entities.Order;
 import com.pedrovitorino.course.entities.OrderItem;
+import com.pedrovitorino.course.entities.Product;
 import com.pedrovitorino.course.entities.User;
+import com.pedrovitorino.course.entities.enums.OrderStatus;
+import com.pedrovitorino.course.repositories.OrderItemRepository;
 import com.pedrovitorino.course.repositories.OrderRepository;
+import com.pedrovitorino.course.repositories.ProductRepository;
 import com.pedrovitorino.course.repositories.UserRepository;
 import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;
 
@@ -27,6 +32,10 @@ public class OrderService {
 		private OrderRepository orderRepository;
 		@Autowired
 		private UserRepository userRepository;
+		@Autowired
+		private ProductRepository productRepository;
+		@Autowired
+		private OrderItemRepository orderItemRepository;
 		
 		public List<OrderDTO> findAll() {
 			List<Order> list = orderRepository.findAll();
@@ -60,5 +69,23 @@ public class OrderService {
 			User client = userRepository.getOne(clientId);
 			List<Order> list = orderRepository.findByClient(client);
 			return list.stream().map(e -> new OrderDTO(e)).collect(Collectors.toList());
+		}
+
+		@Transactional
+		public OrderDTO placeOrder(List<OrderItemDTO> dto) {
+			User client = authService.authenticated();
+			
+			Order order = new Order(null, Instant.now(), client, OrderStatus.WAITING_PAYMENT);
+			
+			for (OrderItemDTO itemDTO : dto) {
+				Product product = productRepository.getOne(itemDTO.getProductId());
+				OrderItem item = new OrderItem(order, product, itemDTO.getQuantity(), itemDTO.getPrice());
+				order.getItems().add(item);
+			}
+			
+			orderRepository.save(order);
+			orderItemRepository.saveAll(order.getItems());
+			
+			return new OrderDTO(order);
 		}
 }
