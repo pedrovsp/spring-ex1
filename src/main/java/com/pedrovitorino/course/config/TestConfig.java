@@ -68,7 +68,7 @@ public class TestConfig implements CommandLineRunner {
 		
 		productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 		
-		User u1 = new User(null, "Nelio", "nelio@email.com", "34988884444", passwordEncoder.encode("123543"));
+		User u1 = new User(null, "Nelio", "nelio@email.com", "34988884444", passwordEncoder.encode("123123"));
 		User u2 = new User(null, "Camila", "camila@email.com", "34983384444", passwordEncoder.encode("123123"));
 		
 		userRepository.saveAll(Arrays.asList(u1, u2));

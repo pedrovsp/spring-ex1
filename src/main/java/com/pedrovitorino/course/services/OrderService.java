@@ -15,6 +15,7 @@ import com.pedrovitorino.course.entities.Order;
 import com.pedrovitorino.course.entities.OrderItem;
 import com.pedrovitorino.course.entities.User;
 import com.pedrovitorino.course.repositories.OrderRepository;
+import com.pedrovitorino.course.repositories.UserRepository;
 import com.pedrovitorino.course.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -24,6 +25,8 @@ public class OrderService {
 		private AuthService authService;
 		@Autowired
 		private OrderRepository orderRepository;
+		@Autowired
+		private UserRepository userRepository;
 		
 		public List<OrderDTO> findAll() {
 			List<Order> list = orderRepository.findAll();
@@ -50,5 +53,12 @@ public class OrderService {
 			authService.validateOwnOrderOrAdmin(entity);
 			Set<OrderItem> set = entity.getItems();
 			return set.stream().map(e -> new OrderItemDTO(e)).collect(Collectors.toList());
+		}
+
+		@Transactional(readOnly = true)
+		public List<OrderDTO> findByClientId(Long clientId) {
+			User client = userRepository.getOne(clientId);
+			List<Order> list = orderRepository.findByClient(client);
+			return list.stream().map(e -> new OrderDTO(e)).collect(Collectors.toList());
 		}
 }
