@@ -100,4 +100,27 @@ public class ProductService {
 			Page<Product> products = productRepository.findByCategory(cat, pageable);
 			return products.map(e -> new ProductDTO(e));
 		}
+		
+		@Transactional
+		public void addCategory(Long id, CategoryDTO dto) {
+			Product product = productRepository.getOne(id);
+			Category category = categoryRepository.getOne(dto.getId());
+			product.getCategories().add(category);
+			productRepository.save(product);
+		}
+
+		@Transactional
+		public void removeCategory(Long id, CategoryDTO dto) {
+			Product product = productRepository.getOne(id);
+			Category category = categoryRepository.getOne(dto.getId());
+			product.getCategories().remove(category);
+			productRepository.save(product);
+		}
+		
+		@Transactional
+		public void setCategories(Long id, List<CategoryDTO> dto) {
+			Product product = productRepository.getOne(id);
+			setProductCategories(product, dto);
+			productRepository.save(product);
+		}
 }
