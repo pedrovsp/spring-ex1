@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.pedrovitorino.course.dto.CategoryDTO;
 import com.pedrovitorino.course.dto.OrderDTO;
 import com.pedrovitorino.course.dto.OrderItemDTO;
 import com.pedrovitorino.course.services.OrderService;
